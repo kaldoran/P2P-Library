@@ -1,4 +1,4 @@
 # Order of parameter does not count but
 # You need to respect the pattern : Name:Value
-Ip:87.231.166.227
-Port:16384
+Ip:127.0.0.1
+Port:42001

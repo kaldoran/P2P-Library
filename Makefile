@@ -1,5 +1,5 @@
 # Release/Debug
-DEBUG=no
+DEBUG=yes
 
 # Directories
 SRC_DIR = SRC

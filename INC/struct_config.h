@@ -1,11 +1,16 @@
 #ifndef STRUCT_CONFIG_H
 #define STRUCT_CONFIG_H
 
+#include "socket.h"
+
 typedef struct Configuration {
-	int id_socket;	  /* id de la socket */
-	in_addr_t ip;     /* Host */
-	in_port_t port;   /* Port pour la connection */
+	SOCKET id_socket;           /* id de la socket */
+	SOCKADDR_IN socket_info;    /* Host */
+    char ip_addr[16];           /* XXX.XXX.XXX.XXX\0 */
+    int port;               /* XXXXX\0 */
 } Configuration;
+
+typedef Configuration Client; 
 
 #endif
 
