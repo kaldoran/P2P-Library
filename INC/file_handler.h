@@ -15,7 +15,7 @@
 #define LINE_SIZE 512
 
 /* Load a configuration */
-bool load_configuration(Configuration *_config, char *_path);
+bool load_configuration(Configuration *_config, const char *_path);
 
 #endif 
 

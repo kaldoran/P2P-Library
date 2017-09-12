@@ -17,7 +17,7 @@ char *start_with(char *s1, char *s2) {
 	return NULL;
 }
 
-bool load_configuration(Configuration *_config, char *_path) {
+bool load_configuration(Configuration *_config, const char *_path) {
 	char *ret;
 	
 	char read_line[LINE_SIZE];
