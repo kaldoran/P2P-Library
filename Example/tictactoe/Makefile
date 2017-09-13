@@ -7,8 +7,11 @@ INC_DIR = INC
 OBJ_DIR = OBJ
 BIN_DIR = BIN
 
+LDIR_INC = ../..
+LFLAGS   = -L $(LDIR_INC)/$(OBJ_DIR) -lm -lp2p
+
 CC = gcc
-CFLAGS = -W -Wall -Wextra -O2 -lm
+CFLAGS = -W -Wall -Wextra -O2 $(LFLAGS)
 BIN = TestLib
 
 ifeq ($(DEBUG), yes) 
@@ -30,9 +33,9 @@ all: dir $(BIN_DIR)/$(BIN)
 
 $(BIN_DIR)/$(BIN): $(OBJ)
 ifeq ($(DEBUG), yes)
-	$(CC) $(OBJ) -o $@ -I $(INC_DIR) $(CFLAGS)
+	$(CC) $(OBJ) -o $@ -I $(LDIR_INC)/$(INC_DIR) -I $(INC_DIR) $(CFLAGS)
 else 
-	@$(CC) $(OBJ) -o $@ -I $(INC_DIR) $(CFLAGS)
+	@$(CC) $(OBJ) -o $@ -I $(LDIR_INC)/$(INC_DIR) -I $(LDIR_INC) $(INC_DIR) $(CFLAGS)
 
 endif
 	@echo "$(BIN) well created !"
@@ -43,9 +46,9 @@ endif
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 ifeq ($(DEBUG), yes) 
-	$(CC) -c $^ -o $@ -I $(INC_DIR) $(CFLAGS)
+	$(CC) -c $^ -o $@ -I $(LDIR_INC)/$(INC_DIR) -I $(INC_DIR) $(CFLAGS)
 else 
-	@$(CC) -c $^ -o $@ -I $(INC_DIR) $(CFLAGS)
+	@$(CC) -c $^ -o $@ -I $(LDIR_INC)/$(INC_DIR) -I $(INC_DIR) $(CFLAGS)
 	@echo -e "Creating $@"
 endif
 

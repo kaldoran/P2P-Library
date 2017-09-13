@@ -104,7 +104,6 @@ void create_server() {
 }
 
 bool connection() {
-    char tmp[50] = { 0 };
     initWindows(); // Init socket windows
 
     serv = INVALID_SOCKET;

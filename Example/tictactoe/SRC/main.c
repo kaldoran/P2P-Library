@@ -5,6 +5,8 @@
 #include "error.h"
 #include "boolean.h"
 
+#include "p2p.h"
+
 #define PAWN_J1 'X'
 #define PAWN_J2 'O'
 #define EMPTY_PAWN '-'
@@ -68,6 +70,7 @@ int ask_move() {
     int good = 0;
     char c = EMPTY_PAWN;
 
+    printf("Move ? ");
     while ( good < 2 && (c = getc(stdin)) ) {
         if ( isalpha(c) && c - 'A' < 3 ) { 
             val += (c - 'A');
@@ -88,25 +91,43 @@ int main(int argc, char *argv[]) {
     (void) argv;
 
     int move = 0;
+    char iplay  = PAWN_J1;
     char player = PAWN_J1;
+    char winner = EMPTY_PAWN;
     char board[BOARD_SIZE + 1] = "---------";
     char next_board[BOARD_SIZE + 1] = "---------";
-
-    while ( check_win(board) == EMPTY_PAWN ) {
+    
+    connection();
+    if ( serv != INVALID_SOCKET ) iplay = PAWN_J2;
+    
+    while ( (winner = check_win(board)) == EMPTY_PAWN ) {
         print_board(board);
-        if ( player == PAWN_J1 ) {
+        printf("You are [%c]\n", iplay);
+        if ( player == iplay ) {
             do {
                 move = ask_move();
             } while ( board[move] != EMPTY_PAWN );
             
-            board[move] = PAWN_J1; 
-            // send 
+            board[move] = player; 
+            tcp_send(board, BOARD_SIZE + 1); // send 
         } else {
-            ; // Recv - Check_board
+            printf("Waiting for [%c] to play\n", player);
+            tcp_recv(next_board, BOARD_SIZE + 1); // Recv - Check_board
+
+            if ( check_board(board, next_board) == TRUE ) strcpy(board, next_board);
+            else break;
         }
 
         player = SWITCH_PLAYER(player);
-        getc(stdin);
     }
+    
+    printf("Final board\n");
+    print_board(board);
+ 
+    if ( winner != EMPTY_PAWN )
+        printf("Player [%c] win - You were [%c]\n", winner, iplay);
+ 
+    disconnect();
+    
     exit(EXIT_SUCCESS);
 }
