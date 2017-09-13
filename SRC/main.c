@@ -1,16 +1,20 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "p2p.h"
 
-int main() {
-    char msg[20];
-    if ( connection("./CONF/config.txt") == FALSE ) return(EXIT_FAILURE);
+int main(int argc, char *argv[]) {
+    bool connected = FALSE;
+
+    if ( (connected = connection()) == FALSE ) 
+        return(EXIT_FAILURE);
 
     // PLAY GAME
-    tcp_send("Salut", 6);
-    tcp_recv(msg, 20);
+        // tcp_send("Salu2", 6);
+        // tcp_recv(buffer, sizeof(buffer));
     // END GAME
 
-    (void) disconnect();
+    if ( connected ) 
+        (void) disconnect();
     
     return(EXIT_SUCCESS);
 }

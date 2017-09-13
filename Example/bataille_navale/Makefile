@@ -57,7 +57,7 @@ endif
 clean:
 ifeq ($(DEBUG), yes) 
 	rm -rf ./$(OBJ_DIR);
-	rm -rf ./$(BIN);
+	rm -rf ./$(BIN_DIR);
 else
 	@rm -rf ./$(OBJ_DIR);
 	@echo -e "Remove object file and directory"

@@ -14,17 +14,17 @@ bool tcp_start() {
 
     struct hostent *h;
 
-    c.id_socket = socket(AF_INET,SOCK_STREAM,0);
+    s.id_socket = socket(AF_INET,SOCK_STREAM,0);
     
-    c.socket_info.sin_family = AF_INET;
-    c.socket_info.sin_port = htons(c.port);
+    s.socket_info.sin_family = AF_INET;
+    s.socket_info.sin_port = htons(s.port);
 
-    if( (h = gethostbyname(c.ip_addr)) == NULL ) return FALSE; /* Can't connect */
+    if( (h = gethostbyname(s.ip_addr)) == NULL ) return FALSE; /* Can't connect */
 
-    memcpy(&c.socket_info.sin_addr.s_addr, h->h_addr, h->h_length);
+    memcpy(&s.socket_info.sin_addr.s_addr, h->h_addr, h->h_length);
     
-    if (connect(c.id_socket, (struct sockaddr *)&(c.socket_info), sizeof(c.socket_info)) < 0){
-        closesocket(c.id_socket);
+    if (connect(s.id_socket, (struct sockaddr *)&(s.socket_info), sizeof(s.socket_info)) < 0){
+        closesocket(s.id_socket);
         return FALSE;
     }
     
@@ -32,12 +32,16 @@ bool tcp_start() {
 }
 
 bool tcp_stop() {
-    closesocket(c.id_socket);
+    if ( s.id_socket != INVALID_SOCKET ) 
+        closesocket(s.id_socket);
+    
+    if ( serv != INVALID_SOCKET )
+        closesocket(serv);
 
-    strcpy(c.ip_addr, "");
-    c.port = 0;
+    strcpy(s.ip_addr, "");
+    s.port = 0;
 
-    c.id_socket = INVALID_SOCKET;
+    s.id_socket = INVALID_SOCKET;
     return TRUE;
 }
 
@@ -47,6 +51,6 @@ int tcp_action_delay(void *_data, int _data_length, int _second, int _millisecon
     tv.tv_sec = _second;
     tv.tv_usec = _millisecond; 
     
-    setsockopt(c.id_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval)); /* Set a timer on respond */
+    setsockopt(s.id_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval)); /* Set a timer on respond */
     return tcp_recv(_data, _data_length);
 } 
